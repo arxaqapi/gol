@@ -23,6 +23,8 @@ void stop_it(SDL_Window *w, SDL_Renderer *r)
     exit(EXIT_FAILURE);
 }
 
+
+
 int main(void)
 {
     srand(time(NULL));
@@ -83,22 +85,11 @@ int main(void)
     render_cell_grid(w, renderer, SIZE_CELL, cells);
     draw_grid(w, renderer, SIZE_CELL);
 
-    //it
-    SDL_Delay(1000);
 
-    set_next_grid(cells, next_cells, renderer);
-    render_cell_grid(w, renderer, SIZE_CELL, next_cells);
-    draw_grid(w, renderer, SIZE_CELL);
-
-    /* print_mat(cells, SIZE_CELL);
-    printf("\n");
-    print_mat(next_cells, SIZE_CELL); */
-
-    //it
-
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i < 100; i++)
     {
-        SDL_Delay(300);
+        //it
+        SDL_Delay(200);
 
         set_next_grid(cells, next_cells, renderer);
         render_cell_grid(w, renderer, SIZE_CELL, next_cells);
@@ -107,15 +98,22 @@ int main(void)
         cp_mat(next_cells, cells);
     }
 
+
+
+
     while (!terminate)
     {
         SDL_WaitEvent(&event);
-
-        if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+        if (event.window.event == SDL_KEYDOWN)
         {
             terminate = true;
         }
     }
+
+
+
+
+
 
     SDL_DestroyRenderer(renderer);
     //  Destroys window

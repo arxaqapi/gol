@@ -44,31 +44,25 @@ int **init_grid_rand(int cell_size)
     return grid;
 }
 
-void revive_cell(int x, int y, SDL_Renderer *r, int offset)
-{
-    SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
-    rect.h = x + offset;
-    rect.w = y + offset;
 
-    SDL_Color wh = {255, 255, 255, 255};
-    SDL_SetRenderDrawColor(r, wh.r, wh.g, wh.b, wh.a);
+void flip_cell(int x, int y, SDL_Renderer *r, int offset, bool nextState)
+{
+    SDL_Rect rect = {x, y, y + offset, x + offset};
+
+    SDL_Color col = {255, 255, 255, 255};
+
+    if (nextState) // alive
+    {
+        col.r = 0;
+        col.g = 0;
+        col.b = 0;
+    }
+
+    SDL_SetRenderDrawColor(r, col.r, col.g, col.b, col.a);
     SDL_RenderFillRect(r, &rect);
 }
 
-void kill_cell(int x, int y, SDL_Renderer *r, int offset)
-{
-    SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
-    rect.h = y + offset;
-    rect.w = x + offset;
 
-    SDL_Color bl = {0, 0, 0, 255};
-    SDL_SetRenderDrawColor(r, bl.r, bl.g, bl.b, bl.a);
-    SDL_RenderFillRect(r, &rect);
-}
 
 void render_cell_grid(SDL_Window *w, SDL_Renderer *r, int cell_size, int **cells)
 {
@@ -79,11 +73,13 @@ void render_cell_grid(SDL_Window *w, SDL_Renderer *r, int cell_size, int **cells
         {
             if (cells[i][j] == 1)
             {
-                revive_cell(j * cell_size, i * cell_size, r, cell_size);
+                //  revivie
+                flip_cell(j * cell_size, i * cell_size, r, cell_size, true);
             }
             if (cells[i][j] == 0)
             {
-                kill_cell(j * cell_size, i * cell_size, r, cell_size);
+                //  kill
+                flip_cell(j * cell_size, i * cell_size, r, cell_size, false);
             }
         }
     }
