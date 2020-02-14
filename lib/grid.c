@@ -1,12 +1,10 @@
 #include "grid.h"
 
-
 int le_vrai_modulo(int a, int b)
 {
     int r = a % b;
     return r < 0 ? r + b : r;
 }
-
 
 int **create_mat_int(int cell_size)
 {
@@ -44,7 +42,6 @@ int **init_grid_rand(int cell_size)
     return grid;
 }
 
-
 void flip_cell(int x, int y, SDL_Renderer *r, int offset, bool nextState)
 {
     SDL_Rect rect = {x, y, y + offset, x + offset};
@@ -62,18 +59,16 @@ void flip_cell(int x, int y, SDL_Renderer *r, int offset, bool nextState)
     SDL_RenderFillRect(r, &rect);
 }
 
-
-
 void render_cell_grid(SDL_Window *w, SDL_Renderer *r, int cell_size, int **cells)
 {
-    /// \brief from rednerer to screen
+    /// \brief from renderer to screen
     for (int i = 0; i < (W_HEIGTH / cell_size); i++)
     {
         for (int j = 0; j < (W_WIDTH / cell_size); j++)
         {
             if (cells[i][j] == 1)
             {
-                //  revivie
+                //  revive
                 flip_cell(j * cell_size, i * cell_size, r, cell_size, true);
             }
             if (cells[i][j] == 0)
@@ -129,8 +124,8 @@ int count_neighbours(int **cells, int x, int y)
             if (!(i == 0 && j == 0))
             {
                 /* printf("x: %d | y: %d", x+i, y+j); */
-                sum += cells[le_vrai_modulo(x+i, nb_r)][le_vrai_modulo(y + j, nb_c)];
-            }            
+                sum += cells[le_vrai_modulo(x + i, nb_r)][le_vrai_modulo(y + j, nb_c)];
+            }
         }
     }
     return sum; //(int)rand()%4;
@@ -138,7 +133,7 @@ int count_neighbours(int **cells, int x, int y)
 
 void set_next_grid(int **cells, int **next_cells, SDL_Renderer *r)
 {
-    /// \brief set next_cells to next itération 
+    /// \brief set next_cells to next itération
     int c_nb = 0;
     for (int i = 0; i < W_HEIGTH / SIZE_CELL; i++)
     {
@@ -164,7 +159,6 @@ void set_next_grid(int **cells, int **next_cells, SDL_Renderer *r)
             {
                 next_cells[i][j] = cells[i][j];
             }
-            
         }
     }
 }
@@ -176,7 +170,6 @@ void black_screen(SDL_Renderer *r)
     SDL_RenderClear(r);
     SDL_RenderPresent(r);
 }
-
 
 void cp_mat(int **source, int **dest)
 {

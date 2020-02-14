@@ -23,8 +23,6 @@ void stop_it(SDL_Window *w, SDL_Renderer *r)
     exit(EXIT_FAILURE);
 }
 
-
-
 int main(void)
 {
     srand(time(NULL));
@@ -85,7 +83,6 @@ int main(void)
     render_cell_grid(w, renderer, SIZE_CELL, cells);
     draw_grid(w, renderer, SIZE_CELL);
 
-
     for (int i = 0; i < 100; i++)
     {
         //it
@@ -98,9 +95,6 @@ int main(void)
         cp_mat(next_cells, cells);
     }
 
-
-
-
     while (!terminate)
     {
         SDL_WaitEvent(&event);
@@ -109,11 +103,6 @@ int main(void)
             terminate = true;
         }
     }
-
-
-
-
-
 
     SDL_DestroyRenderer(renderer);
     //  Destroys window
