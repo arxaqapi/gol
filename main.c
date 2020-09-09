@@ -28,6 +28,14 @@ void stop_it(SDL_Window *w, SDL_Renderer *r)
 
 int main(void)
 {
+    // framerate
+    const int FPS = 60;
+    const int frame_delay = 1000 / FPS;
+
+    Uint32 frame_start;
+    int frame_time;
+
+
     srand(time(NULL));
 
     SDL_Window *w = NULL;
@@ -91,6 +99,9 @@ int main(void)
 
     while (!terminate)
     {
+        // framerate handler
+        frame_start = SDL_GetTicks();
+
         // while there are events ...
         // handle them, in this case only execute the quit ones
         while (SDL_PollEvent(&event) != 0)
@@ -128,6 +139,14 @@ int main(void)
             render_cell_grid(w, renderer, SIZE_CELL, next_cells);
             copy_mat(next_cells, cells);
         }
+
+        // framerate handler
+        frame_time = SDL_GetTicks() - frame_start;
+        if (frame_delay > frame_time)
+        {
+            SDL_Delay(frame_delay - frame_time);
+        }
+        
     }
 
     SDL_DestroyRenderer(renderer);
