@@ -2,8 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "grid.h"
 #include <time.h>
+
+#include "grid.h"
+#include "utils.h"
+
 
 // TODO Clean this, separate files
 
@@ -32,7 +35,10 @@ int main(void)
     SDL_Renderer *renderer = NULL;
     SDL_Color blue = {0, 0, 255, 255};
 
+    // main loop quit flag
     bool terminate = false;
+    // spacebar stops the games
+    bool stop = true;
 
     //  Initlialize SDL_Video
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -43,7 +49,7 @@ int main(void)
     }
 
     //  Creates the window and shows it
-    w = SDL_CreateWindow("Test",
+    w = SDL_CreateWindow("Another Game of Life",
                          SDL_WINDOWPOS_CENTERED,
                          SDL_WINDOWPOS_CENTERED,
                          W_WIDTH,
@@ -81,26 +87,46 @@ int main(void)
     next_cells = create_mat_int(SIZE_CELL);
 
     render_cell_grid(w, renderer, SIZE_CELL, cells);
-    draw_grid(w, renderer, SIZE_CELL);
 
-    for (int i = 0; i < 100; i++)
-    {
-        //it
-        SDL_Delay(200);
-
-        set_next_grid(cells, next_cells, renderer);
-        render_cell_grid(w, renderer, SIZE_CELL, next_cells);
-        draw_grid(w, renderer, SIZE_CELL);
-
-        cp_mat(next_cells, cells);
-    }
 
     while (!terminate)
     {
-        SDL_WaitEvent(&event);
-        if (event.window.event == SDL_KEYDOWN)
+        // while there are events ...
+        // handle them, in this case only execute the quit ones
+        while (SDL_PollEvent(&event) != 0)
         {
-            terminate = true;
+            // User wants to quit
+            if ( event.type == SDL_QUIT )
+            {
+                db("Received an SDL_QUIT event");
+                db("Quiting main loop");
+                terminate = true;
+            }
+            else if ( event.type == SDL_KEYDOWN)
+            {
+                //select action based on keypress
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_SPACE:
+                    db("SPACE pressed ...");
+                    stop = stop ? false : true;
+                    break;
+                
+                default:
+                    break;
+                }
+            }
+            
+        }
+
+
+        if (!stop)
+        {
+            SDL_Delay(100);
+
+            set_next_grid(cells, next_cells, renderer);
+            render_cell_grid(w, renderer, SIZE_CELL, next_cells);
+            copy_mat(next_cells, cells);
         }
     }
 
@@ -109,28 +135,8 @@ int main(void)
     SDL_DestroyWindow(w);
     //  Stops SDL_process
     SDL_Quit();
+
+    free_grid(cells, SIZE_CELL);
+    free_grid(next_cells, SIZE_CELL);
     return 0;
 }
-
-/* while (!terminate)
-    {
-        SDL_WaitEvent(&event);
-        
-        if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-        {
-            terminate = true;
-        }
-    } */
-
-/*for (int i = 0; i < 5; i++)
-    {
-        SDL_Delay(1000);
-        black_screen(renderer);
-        set_next_grid(cells, next_cells, renderer);
-        cp_mat(next_cells, cells);
-        render_cell_grid(w, renderer, SIZE_CELL, cells);
-        draw_grid(w, renderer, SIZE_CELL);
-    }
-
-
-    */

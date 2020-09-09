@@ -35,16 +35,27 @@ int **init_grid_rand(int cell_size)
     {
         for (int j = 0; j < W_WIDTH / cell_size; j++)
         {
-            rand_n = rand() % 2;
-            grid[i][j] = rand_n;
+            grid[i][j] = rand() % 2;
         }
     }
     return grid;
 }
 
+void free_grid(int **grid, int cell_size)
+{
+    for (int i = 0; i < W_HEIGTH / cell_size; i++)
+    {
+        free(grid[i]);
+    }
+    free(grid);
+}
+
 void flip_cell(int x, int y, SDL_Renderer *r, int offset, bool nextState)
 {
-    SDL_Rect rect = {x, y, y + offset, x + offset};
+    int grid_offset = 1;
+    SDL_Rect rect = {x + grid_offset, y + grid_offset, offset - (grid_offset * 2), offset - (grid_offset * 2)};
+
+    // SDL_Rect rect = {x, y, y + offset, x + offset};
 
     SDL_Color col = {255, 255, 255, 255};
 
@@ -66,7 +77,7 @@ void render_cell_grid(SDL_Window *w, SDL_Renderer *r, int cell_size, int **cells
     {
         for (int j = 0; j < (W_WIDTH / cell_size); j++)
         {
-            if (cells[i][j] == 1)
+            /* if (cells[i][j] == 1)
             {
                 //  revive
                 flip_cell(j * cell_size, i * cell_size, r, cell_size, true);
@@ -75,7 +86,10 @@ void render_cell_grid(SDL_Window *w, SDL_Renderer *r, int cell_size, int **cells
             {
                 //  kill
                 flip_cell(j * cell_size, i * cell_size, r, cell_size, false);
-            }
+            } */
+
+            flip_cell(j * cell_size, i * cell_size, r, cell_size, cells[i][j]? true : false);
+
         }
     }
     SDL_RenderPresent(r);
@@ -93,24 +107,6 @@ void print_mat(int **mat, int cell_size)
     }
 }
 
-void draw_grid(SDL_Window *w, SDL_Renderer *r, int cell_size)
-{
-    /// \brief set color to grey and draw h lines
-    assert(w != NULL && r != NULL);
-    SDL_Color gr = {100, 100, 100, 255};
-
-    SDL_SetRenderDrawColor(r, gr.r, gr.g, gr.b, gr.a);
-
-    for (int i = cell_size; i < W_WIDTH; i += cell_size)
-    {
-        SDL_RenderDrawLine(r, i, 0, i, W_HEIGTH);
-    }
-    for (int i = cell_size; i < W_HEIGTH; i += cell_size)
-    {
-        SDL_RenderDrawLine(r, 0, i, W_WIDTH, i);
-    }
-    SDL_RenderPresent(r);
-}
 
 int count_neighbours(int **cells, int x, int y)
 {
@@ -171,7 +167,7 @@ void black_screen(SDL_Renderer *r)
     SDL_RenderPresent(r);
 }
 
-void cp_mat(int **source, int **dest)
+void copy_mat(int **source, int **dest)
 {
     for (int i = 0; i < W_HEIGTH / SIZE_CELL; i++)
     {
