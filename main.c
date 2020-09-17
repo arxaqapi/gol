@@ -7,7 +7,6 @@
 #include "grid.h"
 #include "utils.h"
 
-
 // TODO Clean this, separate files
 
 // ANCHOR There is the quit func
@@ -34,7 +33,6 @@ int main(void)
 
     Uint32 frame_start;
     int frame_time;
-
 
     srand(time(NULL));
 
@@ -96,7 +94,6 @@ int main(void)
 
     render_cell_grid(w, renderer, SIZE_CELL, cells);
 
-
     while (!terminate)
     {
         // framerate handler
@@ -107,13 +104,13 @@ int main(void)
         while (SDL_PollEvent(&event) != 0)
         {
             // User wants to quit
-            if ( event.type == SDL_QUIT )
+            if (event.type == SDL_QUIT)
             {
                 db("Received an SDL_QUIT event");
                 db("Quiting main loop");
                 terminate = true;
             }
-            else if ( event.type == SDL_KEYDOWN)
+            else if (event.type == SDL_KEYDOWN)
             {
                 //select action based on keypress
                 switch (event.key.keysym.sym)
@@ -122,14 +119,12 @@ int main(void)
                     db("SPACE pressed ...");
                     stop = stop ? false : true;
                     break;
-                
+
                 default:
                     break;
                 }
             }
-            
         }
-
 
         if (!stop)
         {
@@ -146,7 +141,6 @@ int main(void)
         {
             SDL_Delay(frame_delay - frame_time);
         }
-        
     }
 
     SDL_DestroyRenderer(renderer);
