@@ -1,7 +1,7 @@
 # gol
 
 ### Another game of life
-The current version is only made and tested on linux
+The current version is only developed and tested on linux
 
 ### Dependencies
 * SDL 2.0
